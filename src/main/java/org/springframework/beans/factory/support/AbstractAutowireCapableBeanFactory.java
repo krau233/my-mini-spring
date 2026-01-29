@@ -5,9 +5,11 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.PropertyValue;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.BeanReference;
 
-public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory implements AutowireCapableBeanFactory {
+public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory
+        implements AutowireCapableBeanFactory {
     private InstantiationStrategy instantiationStrategy = new SimpleInstantiationStrategy();
     @Override
     protected Object createBean(String beanName, BeanDefinition beanDefinition) throws BeansException {
@@ -19,6 +21,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         try {
             bean = createBeanInstance(beanDefinition);
             applyPropertyValues(beanName,bean,beanDefinition);
+            bean = initializeBean(beanName,bean,beanDefinition);
         } catch (Exception e) {
             throw new BeansException("Instantiation of bean failed", e);
         }
@@ -26,7 +29,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         addSingleton(beanName, bean);
         return bean;
     }
-
+    protected Object createBeanInstance(BeanDefinition beanDefinition) {
+        return getInstantiationStrategy().instantiate(beanDefinition);
+    }
     /**
      * 为bean填充属性
      *
@@ -49,9 +54,62 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             throw new BeansException("Error setting property values for bean: " + beanName, ex);
         }
     }
-    protected Object createBeanInstance(BeanDefinition beanDefinition) {
-        return getInstantiationStrategy().instantiate(beanDefinition);
+
+    private Object initializeBean(String beanName, Object bean, BeanDefinition beanDefinition) {
+        //执行BeanPostProcessor的前置处理
+        Object wrappedBean = applyBeanPostProcessorsBeforeInitialization(bean, beanName);
+
+        //TODO 后面会在此处执行bean的初始化方法
+        invokeInitMethods(beanName, wrappedBean, beanDefinition);
+
+        //执行BeanPostProcessor的后置处理
+        wrappedBean = applyBeanPostProcessorsAfterInitialization(bean, beanName);
+        return wrappedBean;
     }
+
+    @Override
+    public Object applyBeanPostProcessorsBeforeInitialization(Object existingBean, String beanName)
+            throws BeansException {
+        Object result = existingBean;
+        for (BeanPostProcessor processor : getBeanPostProcessors()) {
+            Object current = processor.postProcessBeforeInitialization(result, beanName);
+            if (current == null) {
+                return result;
+            }
+            result = current;
+        }
+        return result;
+    }
+
+    @Override
+    public Object applyBeanPostProcessorsAfterInitialization(Object existingBean, String beanName)
+            throws BeansException {
+
+        Object result = existingBean;
+        for (BeanPostProcessor processor : getBeanPostProcessors()) {
+            Object current = processor.postProcessAfterInitialization(result, beanName);
+            if (current == null) {
+                return result;
+            }
+            result = current;
+        }
+        return result;
+    }
+    /**
+     * 执行bean的初始化方法
+     *
+     * @param beanName
+     * @param bean
+     * @param beanDefinition
+     * @throws Throwable
+     */
+    protected void invokeInitMethods(String beanName, Object bean, BeanDefinition beanDefinition) {
+        //TODO 后面会实现
+        System.out.println("执行bean[" + beanName + "]的初始化方法");
+    }
+
+
+
     public InstantiationStrategy getInstantiationStrategy() {
         return instantiationStrategy;
     }
