@@ -78,4 +78,24 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
     public abstract ConfigurableListableBeanFactory getBeanFactory();
 
+
+    @Override
+    public void registerShutdownHook() {
+        Thread shutdownHook = new Thread(){
+            public void run(){
+                doClose();
+            }
+        };
+        Runtime.getRuntime().addShutdownHook(shutdownHook);
+    }
+
+    @Override
+    public void close(){doClose();}
+
+    protected void doClose(){destroyBeans();}
+
+    protected void destroyBeans(){
+        getBeanFactory().destroySingletons();
+    }
+
 }
