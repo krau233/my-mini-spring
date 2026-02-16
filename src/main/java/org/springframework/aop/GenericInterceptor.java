@@ -31,6 +31,7 @@ public class GenericInterceptor implements MethodInterceptor {
             if (throwsAdvice != null) {
                 throwsAdvice.throwsHandle(throwable, invocation.getMethod(), invocation.getArguments(), invocation.getThis());
             }
+            throw throwable;
         } finally {
             //后置通知
             if (afterAdvice != null) {
