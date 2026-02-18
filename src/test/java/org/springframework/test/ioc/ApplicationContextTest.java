@@ -5,6 +5,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.test.bean.Car;
 import org.springframework.test.bean.Person;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -12,6 +14,17 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @date 2020/11/28
  */
 public class ApplicationContextTest {
+
+
+	public void binaryWatch(int turnedOn,int total,List<int[]> list){
+		if(turnedOn>=total){
+			int[] time = new int[10];
+			for(int i = time.length-1;i>=time.length-turnedOn;i--){
+				time[i] =1;
+			}
+			list.add(time);
+		}
+	}
 
 	@Test
 	public void testApplicationContext() throws Exception {
