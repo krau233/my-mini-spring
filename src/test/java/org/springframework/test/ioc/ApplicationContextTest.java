@@ -15,17 +15,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class ApplicationContextTest {
 
-
-	public void binaryWatch(int turnedOn,int total,List<int[]> list){
-		if(turnedOn>=total){
-			int[] time = new int[10];
-			for(int i = time.length-1;i>=time.length-turnedOn;i--){
-				time[i] =1;
-			}
-			list.add(time);
-		}
-	}
-
 	@Test
 	public void testApplicationContext() throws Exception {
 		ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:spring.xml");
