@@ -5,7 +5,9 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.test.bean.Car;
 import org.springframework.test.bean.Person;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -14,6 +16,8 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @date 2020/11/28
  */
 public class ApplicationContextTest {
+
+
 
 	@Test
 	public void testApplicationContext() throws Exception {
