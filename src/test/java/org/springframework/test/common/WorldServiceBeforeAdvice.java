@@ -1,6 +1,6 @@
 package org.springframework.test.common;
 
-import org.springframework.aop.BeforeAdvice;
+
 import org.springframework.aop.MethodBeforeAdvice;
 
 import java.lang.reflect.Method;
