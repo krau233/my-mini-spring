@@ -4,6 +4,9 @@ import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.test.bean.Car;
 
+import java.util.Arrays;
+import java.util.Comparator;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class FactoryBeanTest {
